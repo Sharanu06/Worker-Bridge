@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register | Worker Bridge</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">Worker <span>Bridge</span></a>
+</nav>
+
+<section class="form-section centered">
+  <form class="login-form" id="registerForm">
+    <h2>Create Account</h2>
+
+    <!-- ROLE -->
+    <label>Register As</label>
+    <select id="role" required>
+      <option value="">Select</option>
+      <option value="worker">Worker</option>
+      <option value="employer">Job Provider</option>
+    </select>
+
+    <!-- COMMON -->
+    <label>Full Name</label>
+    <input type="text" id="name" required>
+
+    <label>Email</label>
+    <input type="email" id="email" required>
+
+    <label>Password</label>
+    <input type="password" id="password" required>
+
+    <!-- WORKER FIELDS -->
+    <div id="workerFields" style="display:none">
+      <label>Primary Skill</label>
+      <select id="skill">
+        <option value="">Select skill</option>
+        <option>Electrician</option>
+        <option>Plumber</option>
+        <option>Mason</option>
+        <option>Carpenter</option>
+        <option>Painter</option>
+        <option>Cook</option>
+        <option>Labourer</option>
+        <option>Gardener</option>
+      </select>
+
+      <label>Experience (Years)</label>
+      <input type="number" id="experience" min="0">
+
+      <label>Mobile Number</label>
+      <input type="tel" id="workerPhone" pattern="[0-9]{10}" placeholder="10 digit number">
+
+      <label>Location</label>
+      <input type="text" id="workerLocation" placeholder="City / Area">
+    </div>
+
+    <!-- EMPLOYER FIELDS -->
+    <div id="employerFields" style="display:none">
+      <label>Provider Type</label>
+      <select id="providerType">
+        <option value="">Select</option>
+        <option>Individual</option>
+        <option>Company</option>
+      </select>
+
+      <label>Mobile Number</label>
+      <input type="tel" id="employerPhone" pattern="[0-9]{10}" placeholder="10 digit number">
+
+      <label>Location</label>
+      <input type="text" id="employerLocation" placeholder="City / Area">
+    </div>
+
+    <button class="btn primary" type="submit">Create Account</button>
+  </form>
+</section>
+
+<script>
+const roleSelect = document.getElementById("role");
+const workerFields = document.getElementById("workerFields");
+const employerFields = document.getElementById("employerFields");
+
+/* SHOW / HIDE FIELDS BASED ON ROLE */
+roleSelect.addEventListener("change", function () {
+  if (this.value === "worker") {
+    workerFields.style.display = "block";
+    employerFields.style.display = "none";
+  } else if (this.value === "employer") {
+    employerFields.style.display = "block";
+    workerFields.style.display = "none";
+  } else {
+    workerFields.style.display = "none";
+    employerFields.style.display = "none";
+  }
+});
+
+/* SUBMIT HANDLER — PUT THIS HERE */
+document.getElementById("registerForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const role = roleSelect.value;
+  if (!role) {
+    alert("Please select role");
+    return;
+  }
+
+  let user = {
+    role: role,
+    name: name.value,
+    email: email.value,
+    password: password.value
+  };
+
+  if (role === "worker") {
+    if (!skill.value || !experience.value || !workerPhone.value || !workerLocation.value) {
+      alert("Please fill all worker details");
+      return;
+    }
+
+    user.skill = skill.value;
+    user.experience = experience.value;
+    user.phone = workerPhone.value;
+    user.location = workerLocation.value;
+  }
+
+  if (role === "employer") {
+    if (!employerPhone.value || !employerLocation.value) {
+      alert("Please fill all employer details");
+      return;
+    }
+
+    user.phone = employerPhone.value;
+    user.location = employerLocation.value;
+  }
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  users.push(user);
+  localStorage.setItem("users", JSON.stringify(users));
+
+  alert("Registration successful!");
+  window.location.href = "login.html";
+});
+</script>
+
+
+</body>
+</html>

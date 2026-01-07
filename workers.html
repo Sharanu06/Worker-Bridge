@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workers | Worker Bridge</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .worker-filters {
+            padding: 30px 8%;
+            background: white;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .filter-input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .worker-list {
+            padding: 40px 8%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .worker-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .worker-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .worker-avatar {
+            width: 80px;
+            height: 80px;
+            background: #ff7b00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .worker-card h3 {
+            margin: 15px 0 5px;
+            color: #333;
+            font-size: 1.3rem;
+        }
+        .worker-skill {
+            color: #ff7b00;
+            font-weight: 600;
+            margin: 5px 0;
+        }
+        .worker-experience {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 5px 0;
+        }
+        .worker-rating {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stars {
+            color: #ffc107;
+            font-size: 1rem;
+        }
+        .rating-count {
+            color: #999;
+            font-size: 0.9rem;
+        }
+        .worker-meta {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            padding: 12px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        .meta-item {
+            text-align: center;
+        }
+        .meta-label {
+            color: #999;
+            font-size: 0.85rem;
+        }
+        .meta-value {
+            font-weight: 600;
+            color: #333;
+        }
+        .worker-availability {
+            font-size: 0.85rem;
+            color: #27ae60;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .availability-dot {
+            width: 8px;
+            height: 8px;
+            background: #27ae60;
+            border-radius: 50%;
+        }
+        .worker-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+        .worker-actions .btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        .btn.primary {
+            background: #ff7b00;
+            color: white;
+        }
+        .btn.primary:hover {
+            background: #e67e22;
+        }
+        .btn.secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        .btn.secondary:hover {
+            background: #e8e8e8;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="text-decoration: none; cursor: pointer;">Worker <span>Bridge</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a class="active" href="workers.html">Workers</a></li>
+            <li><a href="hire.html">Hire Labour</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a class="btn" href="login.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <section class="page-header">
+        <h1>Available Workers</h1>
+        <p>Find skilled labourers from various fields</p>
+    </section>
+
+    <section class="worker-filters">
+        <input type="text" class="filter-input" id="searchInput" placeholder="Search by name or skill...">
+        <select class="filter-input" id="skillFilter">
+            <option value="">All Skills</option>
+            <option value="Electrician">Electrician</option>
+            <option value="Plumber">Plumber</option>
+            <option value="Mason">Mason</option>
+            <option value="Cook">Cook</option>
+            <option value="Labourer">Labourer</option>
+            <option value="Painter">Painter</option>
+            <option value="Carpenter">Carpenter</option>
+            <option value="Gardener">Gardener</option>
+        </select>
+        <select class="filter-input" id="sortFilter">
+            <option value="rating">Sort by Rating</option>
+            <option value="experience">Sort by Experience</option>
+            <option value="hourly">Sort by Hourly Rate</option>
+        </select>
+    </section>
+
+    <section class="worker-list" id="workerList">
+        <div class="worker-card" data-skill="Electrician" data-name="Ramesh">
+            <div class="worker-avatar">⚡</div>
+            <h3>Ramesh Kumar</h3>
+            <div class="worker-skill">Electrician</div>
+            <div class="worker-experience">5 Years Experience</div>
+            <div class="worker-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">(47 reviews)</span>
+            </div>
+            <div class="worker-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Hourly Rate</div>
+                    <div class="meta-value">₹450</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Jobs Done</div>
+                    <div class="meta-value">128</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Success Rate</div>
+                    <div class="meta-value">99%</div>
+                </div>
+            </div>
+            <div class="worker-availability">
+                <span class="availability-dot"></span>
+                Available Today
+            </div>
+            <div class="worker-actions">
+                <a href="hire.html?worker=Ramesh" class="btn primary">Hire Now</a>
+                <button class="btn secondary" onclick="viewProfile('Ramesh')">View Profile</button>
+            </div>
+        </div>
+
+        <div class="worker-card" data-skill="Plumber" data-name="Mahesh">
+            <div class="worker-avatar">🔧</div>
+            <h3>Mahesh Patel</h3>
+            <div class="worker-skill">Plumber</div>
+            <div class="worker-experience">3 Years Experience</div>
+            <div class="worker-rating">
+                <span class="stars">★★★★☆</span>
+                <span class="rating-count">(32 reviews)</span>
+            </div>
+            <div class="worker-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Hourly Rate</div>
+                    <div class="meta-value">₹350</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Jobs Done</div>
+                    <div class="meta-value">89</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Success Rate</div>
+                    <div class="meta-value">98%</div>
+                </div>
+            </div>
+            <div class="worker-availability">
+                <span class="availability-dot"></span>
+                Available Tomorrow
+            </div>
+            <div class="worker-actions">
+                <a href="hire.html?worker=Mahesh" class="btn primary">Hire Now</a>
+                <button class="btn secondary" onclick="viewProfile('Mahesh')">View Profile</button>
+            </div>
+        </div>
+
+        <div class="worker-card" data-skill="Mason" data-name="Suresh">
+            <div class="worker-avatar">🧱</div>
+            <h3>Suresh Singh</h3>
+            <div class="worker-skill">Mason</div>
+            <div class="worker-experience">6 Years Experience</div>
+            <div class="worker-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">(56 reviews)</span>
+            </div>
+            <div class="worker-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Hourly Rate</div>
+                    <div class="meta-value">₹500</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Jobs Done</div>
+                    <div class="meta-value">156</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Success Rate</div>
+                    <div class="meta-value">100%</div>
+                </div>
+            </div>
+            <div class="worker-availability">
+                <span class="availability-dot"></span>
+                Available Today
+            </div>
+            <div class="worker-actions">
+                <a href="hire.html?worker=Suresh" class="btn primary">Hire Now</a>
+                <button class="btn secondary" onclick="viewProfile('Suresh')">View Profile</button>
+            </div>
+        </div>
+        
+        <div class="worker-card" data-skill="Cook" data-name="Sunita">
+            <div class="worker-avatar">🍳</div>
+            <h3>Sunita Devi</h3>
+            <div class="worker-skill">Cook</div>
+            <div class="worker-experience">4 Years Experience</div>
+            <div class="worker-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">(68 reviews)</span>
+            </div>
+            <div class="worker-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Hourly Rate</div>
+                    <div class="meta-value">₹300</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Jobs Done</div>
+                    <div class="meta-value">210</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Success Rate</div>
+                    <div class="meta-value">98%</div>
+                </div>
+            </div>
+            <div class="worker-availability">
+                <span class="availability-dot"></span>
+                Available Today
+            </div>
+            <div class="worker-actions">
+                <a href="hire.html?worker=Sunita" class="btn primary">Hire Now</a>
+                <button class="btn secondary" onclick="viewProfile('Sunita')">View Profile</button>
+            </div>
+        </div>
+
+        <div class="worker-card" data-skill="Labourer" data-name="Raju">
+            <div class="worker-avatar">👷</div>
+            <h3>Raju Kumar</h3>
+            <div class="worker-skill">General Labourer</div>
+            <div class="worker-experience">2 Years Experience</div>
+            <div class="worker-rating">
+                <span class="stars">★★★★☆</span>
+                <span class="rating-count">(34 reviews)</span>
+            </div>
+            <div class="worker-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Hourly Rate</div>
+                    <div class="meta-value">₹200</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Jobs Done</div>
+                    <div class="meta-value">78</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Success Rate</div>
+                    <div class="meta-value">95%</div>
+                </div>
+            </div>
+            <div class="worker-availability">
+                <span class="availability-dot"></span>
+                Available Tomorrow
+            </div>
+            <div class="worker-actions">
+                <a href="hire.html?worker=Raju" class="btn primary">Hire Now</a>
+                <button class="btn secondary" onclick="viewProfile('Raju')">View Profile</button>
+            </div>
+        </div>
+
+        <div class="worker-card" data-skill="Painter" data-name="Priya">
+            <div class="worker-avatar">🎨</div>
+            <h3>Priya Sharma</h3>
+            <div class="worker-skill">Painter</div>
+            <div class="worker-experience">3 Years Experience</div>
+            <div class="worker-rating">
+                <span class="stars">★★★★☆</span>
+                <span class="rating-count">(41 reviews)</span>
+            </div>
+            <div class="worker-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Hourly Rate</div>
+                    <div class="meta-value">₹320</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Jobs Done</div>
+                    <div class="meta-value">102</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Success Rate</div>
+                    <div class="meta-value">97%</div>
+                </div>
+            </div>
+            <div class="worker-availability">
+                <span class="availability-dot"></span>
+                Available Today
+            </div>
+            <div class="worker-actions">
+                <a href="hire.html?worker=Priya" class="btn primary">Hire Now</a>
+                <button class="btn secondary" onclick="viewProfile('Priya')">View Profile</button>
+            </div>
+        </div>
+
+        <div class="worker-card" data-skill="Carpenter" data-name="Arjun">
+            <div class="worker-avatar">🪚</div>
+            <h3>Arjun Mehta</h3>
+            <div class="worker-skill">Carpenter</div>
+            <div class="worker-experience">7 Years Experience</div>
+            <div class="worker-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">(88 reviews)</span>
+            </div>
+            <div class="worker-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Hourly Rate</div>
+                    <div class="meta-value">₹480</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Jobs Done</div>
+                    <div class="meta-value">210</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Success Rate</div>
+                    <div class="meta-value">99%</div>
+                </div>
+            </div>
+            <div class="worker-availability">
+                <span class="availability-dot"></span>
+                Available Today
+            </div>
+            <div class="worker-actions">
+                <a href="hire.html?worker=Arjun" class="btn primary">Hire Now</a>
+                <button class="btn secondary" onclick="viewProfile('Arjun')">View Profile</button>
+            </div>
+        </div>
+
+        <div class="worker-card" data-skill="Gardener" data-name="Deepa">
+            <div class="worker-avatar">🌿</div>
+            <h3>Deepa Rani</h3>
+            <div class="worker-skill">Gardener</div>
+            <div class="worker-experience">5 Years Experience</div>
+            <div class="worker-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-count">(53 reviews)</span>
+            </div>
+            <div class="worker-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Hourly Rate</div>
+                    <div class="meta-value">₹280</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Jobs Done</div>
+                    <div class="meta-value">134</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Success Rate</div>
+                    <div class="meta-value">98%</div>
+                </div>
+            </div>
+            <div class="worker-availability">
+                <span class="availability-dot"></span>
+                Available Tomorrow
+            </div>
+            <div class="worker-actions">
+                <a href="hire.html?worker=Deepa" class="btn primary">Hire Now</a>
+                <button class="btn secondary" onclick="viewProfile('Deepa')">View Profile</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Filtering and Sorting
+        const searchInput = document.getElementById('searchInput');
+        const skillFilter = document.getElementById('skillFilter');
+        const sortFilter = document.getElementById('sortFilter');
+        const workerCards = document.querySelectorAll('.worker-card');
+
+        function filterAndSort() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedSkill = skillFilter.value;
+            const sortBy = sortFilter.value;
+
+            const cardsArray = Array.from(workerCards);
+
+            cardsArray.forEach(card => {
+                const name = card.dataset.name.toLowerCase();
+                const skill = card.dataset.skill;
+                const matchesSearch = name.includes(searchTerm);
+                const matchesSkill = !selectedSkill || skill === selectedSkill;
+
+                card.style.display = matchesSearch && matchesSkill ? '' : 'none';
+            });
+        }
+
+        searchInput.addEventListener('input', filterAndSort);
+        skillFilter.addEventListener('change', filterAndSort);
+
+        function viewProfile(workerName) {
+            alert(`Viewing full profile for ${workerName}. More details coming soon!`);
+        }
+    </script>
+</body>
+</html>

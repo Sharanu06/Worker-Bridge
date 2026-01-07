@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Worker Bridge</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Clean & Minimal Login Page Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff7b00, #ff9a3d);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ============ NAVBAR ============ */
+        .navbar {
+            background: rgba(255, 123, 0, 0.95);
+            backdrop-filter: blur(10px);
+            flex-shrink: 0;
+            padding: 15px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .logo span {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .nav-links .btn {
+            background: white;
+            color: #ff7b00;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* ============ LOGIN CONTAINER ============ */
+        .login-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .login-wrapper {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            max-width: 900px;
+            overflow: hidden;
+        }
+
+        /* ============ BRANDING SECTION ============ */
+        .login-branding {
+            background: linear-gradient(135deg, #ff7b00, #ff9a3d);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .branding-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .login-branding h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .login-branding p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* ============ FORM SECTION ============ */
+        .form-section {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-section h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .form-section > p {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 25px;
+        }
+
+        /* ============ FORM ELEMENTS ============ */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-form label {
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #333;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .form-group input {
+            padding: 12px 14px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #f9fbfc;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff7b00;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 123, 0, 0.12);
+        }
+
+        .form-group input::placeholder {
+            color: #ccc;
+        }
+
+        .form-error {
+            color: #e74c3c;
+            font-size: 0.75rem;
+            margin-top: 4px;
+            display: none;
+            font-weight: 600;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        /* ============ CHECKBOX & OPTIONS ============ */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 12px 0;
+            font-size: 0.8rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #ff7b00;
+        }
+
+        .remember-me label {
+            margin: 0;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .forgot-password {
+            color: #ff7b00;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: color 0.3s;
+        }
+
+        .forgot-password:hover {
+            color: #ff9a3d;
+        }
+
+        /* ============ USER TYPE SELECTOR ============ */
+        .user-type-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .user-type-btn {
+            padding: 10px;
+            border: 2px solid #e8e8e8;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            color: #666;
+        }
+
+        .user-type-btn.active {
+            background: linear-gradient(135deg, #ff7b00, #ff9a3d);
+            color: white;
+            border-color: #ff7b00;
+        }
+
+        .user-type-btn:hover {
+            border-color: #ff7b00;
+        }
+
+        /* ============ BUTTONS ============ */
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 8px;
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #ff7b00, #ff9a3d);
+            color: white;
+            width: 100%;
+            box-shadow: 0 6px 20px rgba(255, 123, 0, 0.3);
+        }
+
+        .btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(255, 123, 0, 0.4);
+        }
+
+        .btn.primary:active {
+            transform: translateY(0);
+        }
+
+        /* ============ DIVIDER ============ */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 12px 0;
+            color: #ddd;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e8e8e8;
+        }
+
+        .divider span {
+            font-size: 0.7rem;
+            color: #bbb;
+        }
+
+        /* ============ SOCIAL LOGIN ============ */
+        .social-login {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .social-btn {
+            padding: 10px;
+            border: 2px solid #e8e8e8;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .social-btn:hover {
+            border-color: #ff7b00;
+            color: #ff7b00;
+            background: #fafafa;
+        }
+
+        .social-btn-icon {
+            font-size: 0.9rem;
+        }
+
+        /* ============ SIGNUP LINK ============ */
+        .signup-link {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .signup-link a {
+            color: #ff7b00;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        .signup-link a:hover {
+            color: #ff9a3d;
+        }
+
+        /* ============ SECURITY BADGE ============ */
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            color: #bbb;
+            font-size: 0.7rem;
+        }
+
+        .security-badge-icon {
+            font-size: 0.8rem;
+        }
+
+        /* ============ SUCCESS MESSAGE ============ */
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: none;
+            border-left: 4px solid #28a745;
+            animation: slideDown 0.3s ease-out;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .success-message.show {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============ RESPONSIVE DESIGN ============ */
+        @media (max-width: 768px) {
+            .login-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .login-branding {
+                padding: 30px;
+                display: none;
+            }
+
+            .form-section {
+                padding: 30px;
+            }
+
+            .form-section h2 {
+                font-size: 1.3rem;
+            }
+
+            .navbar {
+                padding: 12px 4%;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .nav-links {
+                gap: 12px;
+            }
+
+            .nav-links a {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="text-decoration: none; cursor: pointer;">Worker <span>Bridge</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="workers.html">Workers</a></li>
+            <li><a href="hire.html">Hire</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a class="btn" href="login.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- LOGIN SECTION -->
+    <section class="login-container">
+        <div class="login-wrapper">
+            <!-- Left Side - Branding -->
+            <div class="login-branding">
+                <div class="branding-icon">👷</div>
+                <h1>Worker Bridge</h1>
+                <p>Connect with skilled professionals and build amazing projects together.</p>
+            </div>
+
+            <!-- Right Side - Form -->
+            <div class="form-section">
+                <h2>Sign In</h2>
+                <p>Enter your credentials to access your account</p>
+
+                <div class="success-message" id="successMessage">
+                    <span>✓</span>
+                    <span>Login successful!</span>
+                </div>
+
+                <div class="user-type-selector">
+                    <button type="button" class="user-type-btn active" id="employerBtn">Employer</button>
+                    <button type="button" class="user-type-btn" id="workerBtn">Worker</button>
+                </div>
+
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="email" placeholder="your@email.com" required>
+                        <div class="form-error" id="emailError">Valid email required</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="password" placeholder="Enter password" required>
+                        <div class="form-error" id="passwordError">Min. 6 characters</div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+                        <a href="#" class="forgot-password">Forgot?</a>
+                    </div>
+
+                    <button type="submit" class="btn primary">Sign In</button>
+                </form>
+
+                <div class="divider"><span>Or</span></div>
+
+                <div class="social-login">
+                    <button type="button" class="social-btn">
+                        <span class="social-btn-icon">f</span>Facebook
+                    </button>
+                    <button type="button" class="social-btn">
+                        <span class="social-btn-icon">G</span>Google
+                    </button>
+                </div>
+
+                <div class="signup-link">
+                    New here? <a href="#">Create account</a>
+                </div>
+
+                <div class="security-badge">
+                    <span class="security-badge-icon">🔒</span>
+                    <span>Encrypted & secure</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+const loginForm = document.getElementById('loginForm');
+
+loginForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  const user = users.find(
+    u => u.email === email && u.password === password
+  );
+
+  if (!user) {
+    alert("Invalid email or password");
+    return;
+  }
+
+  localStorage.setItem("currentUser", JSON.stringify(user));
+
+  if (user.role === "worker") {
+    window.location.href = "worker-dashboard.html";
+  } else {
+    window.location.href = "employer-dashboard.html";
+  }
+});
+
+// Fix Create Account link
+document.querySelector('.signup-link a').addEventListener('click', function(e){
+  e.preventDefault();
+  window.location.href = "register.html";
+});
+</script>

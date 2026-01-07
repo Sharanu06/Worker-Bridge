@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Worker Bridge</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Advanced Contact Page Styles */
+        .page-header {
+            background: linear-gradient(135deg, #ff7b00, #ff9a3d);
+            color: white;
+            padding: 60px 8%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -100px;
+        }
+
+        .page-header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact-container {
+            padding: 60px 8%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        /* Contact Info Section */
+        .contact-info {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .contact-info h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: 800;
+        }
+
+        .info-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid #ff7b00;
+            transition: all 0.3s;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(255, 123, 0, 0.15);
+        }
+
+        .info-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff7b00, #ff9a3d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .info-content h3 {
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .info-content p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .info-content a {
+            color: #ff7b00;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .info-content a:hover {
+            color: #ff9a3d;
+        }
+
+        /* Hours & Social */
+        .hours-section {
+            background: linear-gradient(135deg, #fff8f0, #fffaf5);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 25px;
+            border-left: 5px solid #ff7b00;
+        }
+
+        .hours-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .hours-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #ffe0c3;
+            font-size: 0.95rem;
+        }
+
+        .hours-item:last-child {
+            border-bottom: none;
+        }
+
+        .day {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .time {
+            color: #666;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff7b00, #ff9a3d);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 123, 0, 0.3);
+        }
+
+        /* Contact Form Section */
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: 800;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contact-form label {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-form input,
+        .contact-form select,
+        .contact-form textarea {
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        .contact-form input:focus,
+        .contact-form select:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #ff7b00;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 123, 0, 0.1);
+        }
+
+        .contact-form textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .form-error {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 6px;
+            display: none;
+            font-weight: 600;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        .required {
+            color: #e74c3c;
+            font-weight: 800;
+        }
+
+        .form-note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #1565c0;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-note-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #ff7b00, #ff9a3d);
+            color: white;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(255, 123, 0, 0.3);
+        }
+
+        .btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 123, 0, 0.4);
+        }
+
+        .btn.primary:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #28a745;
+        }
+
+        .success-message.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 60px 8%;
+            background: #f5f5f5;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #333;
+            font-weight: 800;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .faq-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .faq-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(255, 123, 0, 0.15);
+        }
+
+        .faq-card h3 {
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .faq-icon {
+            font-size: 1.5rem;
+            color: #ff7b00;
+        }
+
+        .faq-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            background: #1a1a1a;
+            color: #ccc;
+            font-size: 0.95rem;
+            margin-top: 0;
+        }
+
+        footer p {
+            margin: 10px 0;
+        }
+
+        footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        footer a {
+            color: #ff7b00;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #ff9a3d;
+        }
+
+        @media (max-width: 1024px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .contact-container {
+                padding: 40px 4%;
+            }
+
+            .info-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .info-icon {
+                margin: 0 auto;
+            }
+
+            .form-section {
+                padding: 25px;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="text-decoration: none; cursor: pointer;">Worker <span>Bridge</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="workers.html">Workers</a></li>
+            <li><a href="hire.html">Hire Labour</a></li>
+            <li><a class="active" href="contact.html">Contact</a></li>
+            <li><a class="btn" href="login.html">Login</a></li>
+        </ul>
+    </nav>
+
+    <section class="page-header">
+        <h1>Get In Touch</h1>
+        <p>We'd love to hear from you. Send us a message!</p>
+    </section>
+
+    <section class="contact-container">
+        <!-- Contact Info Section -->
+        <div class="contact-info">
+            <h2>📞 Contact Information</h2>
+
+            <div class="info-card">
+                <div class="info-icon">📍</div>
+                <div class="info-content">
+                    <h3>Location</h3>
+                    <p>Worker Bridge HQ<br>New Delhi, India<br>Plot No. 123, Tech Park</p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">📞</div>
+                <div class="info-content">
+                    <h3>Phone</h3>
+                    <p>Support: <a href="tel:+919876543210">+91 9876543210</a><br>
+                    Hiring: <a href="tel:+919876543211">+91 9876543211</a></p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">✉️</div>
+                <div class="info-content">
+                    <h3>Email</h3>
+                    <p>Support: <a href="mailto:support@workerbridge.com">support@workerbridge.com</a><br>
+                    Careers: <a href="mailto:careers@workerbridge.com">careers@workerbridge.com</a></p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">💬</div>
+                <div class="info-content">
+                    <h3>Live Chat</h3>
+                    <p>Available 24/7 on our platform for instant support and inquiries.</p>
+                </div>
+            </div>
+
+            <div class="hours-section">
+                <h3>⏰ Business Hours</h3>
+                <div class="hours-item">
+                    <span class="day">Monday - Friday</span>
+                    <span class="time">9:00 AM - 9:00 PM</span>
+                </div>
+                <div class="hours-item">
+                    <span class="day">Saturday</span>
+                    <span class="time">10:00 AM - 6:00 PM</span>
+                </div>
+                <div class="hours-item">
+                    <span class="day">Sunday</span>
+                    <span class="time">10:00 AM - 4:00 PM</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3 style="margin-bottom: 15px; color: #333; font-weight: 700;">Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" class="social-btn" title="Facebook">👍</a>
+                    <a href="#" class="social-btn" title="Twitter">🐦</a>
+                    <a href="#" class="social-btn" title="Instagram">📷</a>
+                    <a href="#" class="social-btn" title="LinkedIn">💼</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form Section -->
+        <div class="form-section">
+            <h2>✉️ Send Us a Message</h2>
+
+            <div class="form-note">
+                <span class="form-note-icon">ℹ️</span>
+                <span>We'll get back to you within 24 hours during business hours.</span>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <span>✓</span>
+                <span>Thank you! We've received your message and will respond shortly.</span>
+            </div>
+
+            <form class="contact-form" id="contactForm">
+                <div class="form-group">
+                    <label>Full Name <span class="required">*</span></label>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
+                    <div class="form-error" id="nameError">Name is required</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address <span class="required">*</span></label>
+                    <input type="email" id="email" placeholder="your.email@example.com" required>
+                    <div class="form-error" id="emailError">Valid email is required</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="phone" placeholder="Optional: +91 98765 43210">
+                </div>
+
+                <div class="form-group">
+                    <label>Subject <span class="required">*</span></label>
+                    <select id="subject" required>
+                        <option value="">Select a subject...</option>
+                        <option value="general">General Inquiry</option>
+                        <option value="support">Technical Support</option>
+                        <option value="hiring">Hiring Services</option>
+                        <option value="partnership">Partnership Opportunity</option>
+                        <option value="feedback">Feedback</option>
+                    </select>
+                    <div class="form-error" id="subjectError">Please select a subject</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Message <span class="required">*</span></label>
+                    <textarea id="message" placeholder="Tell us more about your inquiry..." required></textarea>
+                    <div class="form-error" id="messageError">Message is required (minimum 10 characters)</div>
+                </div>
+
+                <button type="submit" class="btn primary">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <h2>❓ Frequently Asked Questions</h2>
+        <div class="faq-grid">
+            <div class="faq-card">
+                <h3><span class="faq-icon">Q</span> How quickly can I get a worker?</h3>
+                <p>Most requests are fulfilled within 2-4 hours. Our verified workers are available throughout the day to meet your urgent needs.</p>
+            </div>
+
+            <div class="faq-card">
+                <h3><span class="faq-icon">Q</span> Are the workers verified?</h3>
+                <p>Yes! All workers undergo background checks, skill verification, and customer reviews. We prioritize your safety and satisfaction.</p>
+            </div>
+
+            <div class="faq-card">
+                <h3><span class="faq-icon">Q</span> What if I'm not satisfied?</h3>
+                <p>We offer a 100% satisfaction guarantee. If you're not happy with the service, we'll either send another worker or refund your money.</p>
+            </div>
+
+            <div class="faq-card">
+                <h3><span class="faq-icon">Q</span> How do payments work?</h3>
+                <p>Payments are secure and made through our platform. You can pay via card, UPI, or net banking. No cash transfers needed.</p>
+            </div>
+
+            <div class="faq-card">
+                <h3><span class="faq-icon">Q</span> Can I cancel a booking?</h3>
+                <p>Yes, you can cancel up to 1 hour before the scheduled time. Cancellations may have a small fee depending on timing.</p>
+            </div>
+
+            <div class="faq-card">
+                <h3><span class="faq-icon">Q</span> Is there a guarantee on the work?</h3>
+                <p>Absolutely! All work comes with a quality guarantee. If any issues arise, we'll fix them at no additional cost.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Worker Bridge — Connecting Skills with Opportunities</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">FAQ</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        <p>Built with ❤️ for workers and employers worldwide</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('contactForm');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (validateForm()) {
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    subject: document.getElementById('subject').value,
+                    message: document.getElementById('message').value,
+                    timestamp: new Date().toISOString()
+                };
+
+                localStorage.setItem('contactForm_' + Date.now(), JSON.stringify(formData));
+                
+                successMessage.classList.add('show');
+                form.reset();
+                clearErrors();
+
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 5000);
+            }
+        });
+
+        function validateForm() {
+            let isValid = true;
+            clearErrors();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value.trim();
+
+            if (!name) {
+                document.getElementById('nameError').classList.add('show');
+                isValid = false;
+            }
+
+            if (!email || !isValidEmail(email)) {
+                document.getElementById('emailError').classList.add('show');
+                isValid = false;
+            }
+
+            if (!subject) {
+                document.getElementById('subjectError').classList.add('show');
+                isValid = false;
+            }
+
+            if (!message || message.length < 10) {
+                document.getElementById('messageError').classList.add('show');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.form-error').forEach(error => {
+                error.classList.remove('show');
+            });
+        }
+    </script>
+</body>
+</html>

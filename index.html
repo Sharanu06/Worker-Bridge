@@ -1,0 +1,310 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Bridge | Home</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Hero + quick search */
+        .hero-search{display:flex;gap:10px;align-items:center;margin-top:18px;max-width:720px;width:100%}
+        .hero-search input[type="search"]{flex:1;padding:14px 16px;border-radius:12px;border:1px solid #eee;font-size:1rem;background:#fff;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+        .hero-search input[type="search"]::placeholder{color:#9aa4ae}
+        .hero-search button{padding:12px 18px;border-radius:12px;background:linear-gradient(135deg,#ff7b00,#ff9a3d);border:none;color:#fff;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(255,123,0,0.18)}
+
+        /* feature chips under hero */
+        .hero-features{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+        .chip{background:#fff;padding:8px 12px;border-radius:999px;border:1px solid #f0f0f0;font-weight:600;color:#374151;box-shadow:0 6px 18px rgba(16,24,40,0.04)}
+
+        /* Testimonials */
+        .testimonials{max-width:var(--max-width,1000px);margin:36px auto;padding:24px;border-radius:14px;background:linear-gradient(180deg,#fff,#fbfbfc);box-shadow:0 12px 36px rgba(15,23,42,0.06)}
+        .testimonials h3{margin:0 0 12px;font-size:1.35rem}
+        .testimonial-list{display:flex;gap:18px;overflow:hidden;transition:transform .6s ease}
+        .testimonial{min-width:100%;flex-shrink:0;padding:18px;border-radius:12px;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,0.04)}
+        .testimonial p{margin:0 0 8px;color:#374151}
+        .testimonial .who{font-weight:700;color:#111827;font-size:0.95rem}
+        .testimonial-dots{display:flex;gap:8px;justify-content:center;margin-top:12px}
+        .testimonial-dot{width:10px;height:10px;border-radius:50%;background:#e6eef7}
+        .testimonial-dot.active{background:#ff7b00;box-shadow:0 4px 12px rgba(255,123,0,0.18)}
+
+        /* Floating help + back-to-top */
+        .float-help{position:fixed;right:20px;bottom:90px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ff7b00,#ff9a3d);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;box-shadow:0 8px 30px rgba(0,0,0,0.18);cursor:pointer;z-index:999}
+        .back-to-top{position:fixed;right:20px;bottom:20px;width:48px;height:48px;border-radius:8px;background:#1f2937;color:#fff;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.18);z-index:999}
+
+        /* Modal */
+        .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:1000}
+        .modal{background:#fff;padding:20px;border-radius:10px;max-width:520px;width:94%;box-shadow:0 20px 60px rgba(0,0,0,0.18)}
+        .modal h4{margin:0 0 8px}
+        .modal .close{float:right;background:transparent;border:none;font-size:1.1rem;cursor:pointer}
+
+        /* subtle animations */
+        @keyframes popIn {from{opacity:0;transform:translateY(8px) scale(.995)}to{opacity:1;transform:translateY(0) scale(1)}}
+        .hero-card, .box, .testimonial{animation:popIn .6s ease both}
+        .pulse-focus{box-shadow:0 0 0 8px rgba(255,123,0,0.12);outline:none}
+
+        @media (max-width:720px){
+            .hero-search{flex-direction:column;align-items:stretch}
+            .testimonial-list{min-height:180px}
+            .hero-text h1{font-size:1.6rem}
+            .hero-card{padding:20px}
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVIGATION (modern responsive) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo" style="text-decoration: none; cursor: pointer;">Worker <span>Bridge</span></a>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Open navigation">☰</button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="workers.html">Workers</a></li>
+                <li><a href="hire.html">Hire Labour</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a class="btn small primary" href="hire.html">Post a Job</a>
+                <button class="icon-btn" id="navSearchBtn" aria-label="Search">🔍</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO (card-based like login/contact) -->
+    <section class="hero">
+        <div class="hero-wrapper">
+            <div class="hero-card">
+                <div class="hero-text">
+                    <h1>Connecting <span>Workers</span> & Employers</h1>
+                    <p>Find skilled workers or get hired instantly. Trusted, fast and reliable platform.</p>
+                    <div class="hero-features" aria-hidden="true">
+                        <div class="chip">Verified Profiles</div>
+                        <div class="chip">Same-day Booking</div>
+                        <div class="chip">Transparent Pricing</div>
+                    </div>
+                    <div class="hero-buttons">
+                        <a class="btn primary" href="hire.html">Hire Labour</a>
+                        <a class="btn secondary" href="workers.html">Find Work</a>
+                    </div>
+                    <!-- Quick search: helpful, lightweight -->
+                    <form class="hero-search" onsubmit="return handleHeroSearch(event)">
+                        <input type="search" id="heroSearchInput" placeholder="Search workers, e.g. electrician, plumber, carpenter" aria-label="Search workers">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+            <div class="hero-branding">
+                <div class="branding-inner">
+                    <!-- Inline SVG illustration kept here -->
+                    <svg viewBox="0 0 1000 600" class="hero-svg" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="bgG" x1="0" x2="0" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#4a90e2"/>
+                                <stop offset="100%" stop-color="#7bb8e8"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#bgG)" rx="12"/>
+                        <g transform="translate(80,60)">
+                            <g transform="translate(0,80)">
+                                <circle cx="80" cy="90" r="60" fill="#ffd166" opacity="0.15"/>
+                                <rect x="30" y="120" width="100" height="140" rx="14" fill="#1a4d7a"/>
+                            </g>
+                            <g transform="translate(170,40)">
+                                <rect x="20" y="120" width="90" height="150" rx="12" fill="#d4663f"/>
+                            </g>
+                            <g transform="translate(330,20)">
+                                <rect x="30" y="120" width="100" height="140" rx="14" fill="#1a4d7a"/>
+                            </g>
+                            <g transform="translate(500,40)">
+                                <rect x="20" y="120" width="90" height="150" rx="12" fill="#ff9a3d"/>
+                            </g>
+                            <g transform="translate(660,80)">
+                                <rect x="30" y="120" width="100" height="140" rx="14" fill="#1a4d7a"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <div class="branding-caption">Trusted workers, every project</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services">
+        <h2>What We Offer</h2>
+        <div class="service-boxes">
+            <div class="box">
+                <div class="box-icon" aria-hidden="true">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15 8H9L12 2Z" fill="#ff7b00"/><path d="M4 22H20V20C20 16 16 13 12 13C8 13 4 16 4 20V22Z" fill="#1a4d7a"/></svg>
+                </div>
+                <h3>Skilled Workers</h3>
+                <p>Masons, electricians, plumbers, carpenters and more.</p>
+            </div>
+            <div class="box">
+                <div class="box-icon" aria-hidden="true">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14H12L11 22L21 10H13L13 2Z" fill="#ff9a3d"/></svg>
+                </div>
+                <h3>Quick Hiring</h3>
+                <p>Instant booking and verified profiles for employers.</p>
+            </div>
+            <div class="box">
+                <div class="box-icon" aria-hidden="true">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="7" width="18" height="14" rx="2" fill="#ffd166"/><path d="M7 11V9C7 7.34315 8.34315 6 10 6H14C15.6569 6 17 7.34315 17 9V11" stroke="#1a1a1a" stroke-width="1.2"/></svg>
+                </div>
+                <h3>Secure Payments</h3>
+                <p>Safe and easy payment options for both sides.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials" aria-label="Customer testimonials">
+        <h3>Trusted by thousands</h3>
+        <div class="testimonial-list" id="testimonialList">
+            <div class="testimonial">
+                <p>"Excellent service — hired a plumber who arrived on time and fixed everything."</p>
+                <div class="who">— Rajesh K., Homeowner</div>
+            </div>
+            <div class="testimonial">
+                <p>"Quick bookings and verified workers. My site renovation stayed on schedule."</p>
+                <div class="who">— Anita P., Contractor</div>
+            </div>
+            <div class="testimonial">
+                <p>"Great platform for finding steady work. Payments are reliable and timely."</p>
+                <div class="who">— Suresh T., Electrician</div>
+            </div>
+        </div>
+        <div class="testimonial-dots" id="testimonialDots" aria-hidden="true"></div>
+    </section>
+
+    <!-- Floating help button + modal -->
+    <button class="float-help" id="helpBtn" aria-label="Get help">?</button>
+    <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal" role="document">
+            <button class="close" id="modalClose" aria-label="Close">✕</button>
+            <h4>Need help?</h4>
+            <p>Start a chat or reach out via <a href="contact.html">Contact Page</a>. For urgent requests call <a href="tel:+1234567890">+1 234 567 890</a>.</p>
+            <form id="helpForm" onsubmit="return submitHelpForm(event)">
+                <input type="text" id="helpName" placeholder="Your name" style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #ddd">
+                <input type="email" id="helpEmail" placeholder="Your email" style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #ddd">
+                <textarea id="helpMsg" placeholder="How can we help?" style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #ddd" rows="4"></textarea>
+                <div style="text-align:right;margin-top:6px"><button class="btn primary" type="submit">Send</button></div>
+            </form>
+        </div>
+    </div>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+    <footer>
+        <p>© 2025 Worker Bridge — All Rights Reserved.</p>
+    </footer>
+    <script>
+        // Hero search: redirect to workers page with query param
+        function handleHeroSearch(e){
+            e.preventDefault();
+            const q = document.getElementById('heroSearchInput').value.trim();
+            if(!q) return false;
+            const url = 'workers.html?q=' + encodeURIComponent(q);
+            window.location.href = url;
+            return false;
+        }
+
+        // Testimonials: autoplay with dots and click
+        (function(){
+            const list = document.getElementById('testimonialList');
+            const dotsContainer = document.getElementById('testimonialDots');
+            if(!list) return;
+            let idx = 0;
+            const items = Array.from(list.children);
+            function renderDots(){
+                if(!dotsContainer) return;
+                dotsContainer.innerHTML = '';
+                items.forEach((_, i)=>{
+                    const d = document.createElement('button');
+                    d.className = 'testimonial-dot' + (i===0 ? ' active' : '');
+                    d.setAttribute('aria-label', 'Show testimonial ' + (i+1));
+                    d.addEventListener('click', ()=> { idx = i; show(idx); resetTimer(); });
+                    dotsContainer.appendChild(d);
+                });
+            }
+            function updateDots(){
+                if(!dotsContainer) return;
+                Array.from(dotsContainer.children).forEach((d, i)=> d.classList.toggle('active', i===idx));
+            }
+            function show(i){
+                list.style.transform = 'translateX(' + (-i * 100) + '%)';
+                updateDots();
+            }
+            let timer = setInterval(()=>{ idx = (idx + 1) % items.length; show(idx); }, 4200);
+            function resetTimer(){ clearInterval(timer); timer = setInterval(()=>{ idx = (idx + 1) % items.length; show(idx); }, 4200); }
+            renderDots();
+            // initialize
+            show(0);
+        })();
+
+        // Help modal
+        (function(){
+            const helpBtn = document.getElementById('helpBtn');
+            const backdrop = document.getElementById('modalBackdrop');
+            const close = document.getElementById('modalClose');
+            helpBtn && helpBtn.addEventListener('click', ()=>{
+                backdrop.style.display = 'flex';
+                backdrop.setAttribute('aria-hidden','false');
+            });
+            close && close.addEventListener('click', ()=>{
+                backdrop.style.display = 'none';
+                backdrop.setAttribute('aria-hidden','true');
+            });
+            backdrop && backdrop.addEventListener('click', (ev)=>{ if(ev.target===backdrop){ backdrop.style.display='none'; backdrop.setAttribute('aria-hidden','true'); }});
+        })();
+
+        function submitHelpForm(e){
+            e.preventDefault();
+            const name = document.getElementById('helpName').value || 'Guest';
+            // store quickly in localStorage for demo
+            const entries = JSON.parse(localStorage.getItem('helpRequests' )|| '[]');
+            entries.push({name:name,email:document.getElementById('helpEmail').value||'',msg:document.getElementById('helpMsg').value||'',ts:Date.now()});
+            localStorage.setItem('helpRequests', JSON.stringify(entries));
+            alert('Thanks, ' + name + '! We received your message.');
+            document.getElementById('modalBackdrop').style.display='none';
+            return false;
+        }
+
+        // Back to top
+        (function(){
+            const b = document.getElementById('backToTop');
+            window.addEventListener('scroll', ()=>{
+                if(window.scrollY > 300) b.style.display = 'flex'; else b.style.display = 'none';
+            });
+            b.addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
+        })();
+        // Navbar toggle (mobile) + quick search focus
+        (function(){
+            const toggle = document.getElementById('navToggle');
+            const links = document.getElementById('navLinks');
+            if(toggle && links){
+                toggle.addEventListener('click', ()=>{
+                    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+                    toggle.setAttribute('aria-expanded', String(!expanded));
+                    links.classList.toggle('open');
+                });
+            }
+
+            const navSearch = document.getElementById('navSearchBtn');
+            const heroInput = document.getElementById('heroSearchInput');
+            if(navSearch && heroInput){
+                navSearch.addEventListener('click', ()=>{
+                    heroInput.focus();
+                    heroInput.classList.add('pulse-focus');
+                    setTimeout(()=> heroInput.classList.remove('pulse-focus'), 700);
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
